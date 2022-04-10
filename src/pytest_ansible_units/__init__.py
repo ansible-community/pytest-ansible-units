@@ -72,3 +72,7 @@ def pytest_collection(session: pytest.Session) -> None:
         _AnsibleCollectionFinder(paths=paths)._install()
     else:
         sys.path.insert(0, str(collections_dir))
+
+    # TODO: Should we install any collection dependencies as well?
+    # or let the developer do that?
+    # e.g. ansible-galaxy collection install etc
