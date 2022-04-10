@@ -1,5 +1,5 @@
-venv/
-
+# Version created and populated by setuptools_scm
+/src/pytest_ansible_units/_version.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -32,6 +32,15 @@ var/
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Installer logs
 pip-log.txt
