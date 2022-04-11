@@ -4,7 +4,7 @@
 ![VScode Debug](images/vscode_debug.png)
 
 
-A `pytest` plugin to run an ansible collections' unit tests with `pytest`.
+A `pytest` plugin to run an ansible collection's unit tests with `pytest`.
 
 ## Description
 
