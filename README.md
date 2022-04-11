@@ -30,9 +30,36 @@ Until released on `pypi`:
 python -m pip install git+https://github.com/cidrblock/pytest-ansible-units.git
 ```
 
+2 directory structures are supported, with either approach collection dependencies need to be installed. Either in the default user location or in the collection tree structure in option 1.
+
+
+#### Collection tree
+
+The preferred approach is to clone the collections being developed into it's proper collection tree path. This eliminates the need for any symlinks and other collections being developed can be cloned into the same tree structure.
+
+```
+git clone <repo> collections/ansible_collections/<namepspace>/<name>
+```
+
+Note:
+
 * `pytest` needs to be run in the root of the collection directory, adjacent to the collection's galaxy.yml file
-* Add `/collections/` to the .gitignore, since the collection's content will be linked in the `collections` directory
-* Install any collections dependencies into the default user location
+
+#### Shallow tree
+
+The alternative approach allow for a shallow directory structure.
+
+```
+git clone <repo> 
+```
+
+Notes:
+
+* `pytest` needs to be run in the root of the collection directory, adjacent to the collection's galaxy.yml file
+* A collections directory will be created in the repository directory and the collections content linked into it.
+* Add `/collections/` to the .gitignore, since there is no need for this to be checked in.
+* `ansible-test sanity` will fail due to the symlinks, with this approach.
+
 
 ### Executing program
 
