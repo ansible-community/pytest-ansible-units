@@ -30,7 +30,7 @@ jobs:
       
       - name: Clone ansible.utils
         run: |
-          git clone https://github.com/ansible-collections/ansible.utils.git ${{ matrix.directory }}"
+          git clone https://github.com/ansible-collections/ansible.utils.git ${{ matrix.directory }}
       
       - name: Install collection requirements
         run: pip3 install -r requirements.txt -r test-requirements.txt 
