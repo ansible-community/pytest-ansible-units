@@ -9,7 +9,7 @@ jobs:
   test:
     env:
       collection_directory: ansible.utils
-      PY_COLORS: true
+      PY_COLORS: "1"
     runs-on: ubuntu-latest
     strategy:
       matrix:
