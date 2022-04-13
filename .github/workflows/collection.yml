@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        directory: ["~/ansible.utils", "~/collections/ansible_collections/ansible/utils"]
     name: "python ${{ matrix.python-version }} / ${{ matrix.directory }}"
     steps:
       - name: Checkout
@@ -28,14 +27,23 @@ jobs:
         run: |
           pip install -e .
       
-      - name: Clone ansible.utils
+      - name: Clone ansible.utils into a source directory
         run: |
-          git clone https://github.com/ansible-collections/ansible.utils.git ${{ matrix.directory }}
+          git clone https://github.com/ansible-collections/ansible.utils.git --depth 1
+      
+      - name: Clone ansible.utils into a collection tree
+        run: |
+          git clone https://github.com/ansible-collections/ansible.utils.git --depth 1 collections/ansible_collections/ansible/utils
+
       
       - name: Install collection requirements
         run: pip3 install -r requirements.txt -r test-requirements.txt 
-        working-directory: ${{ matrix.directory }}"
+        working-directory: ansible.utils
       
-      - name: Run unit tests
+      - name: Run unit tests from source directory
         run: pytest -v 
-        working-directory: ${{ matrix.directory }}"
+        working-directory: ansible.utils
+      
+      - name: Run unit tests from collection tree
+        run: pytest -v 
+        working-directory: collections/ansible_collections/ansible/utils
