@@ -3,12 +3,11 @@
 ![VScode Overview](images/vscode_overview.png)
 ![VScode Debug](images/vscode_debug.png)
 
-
 An experimental `pytest` plugin to run an ansible collection's unit tests with `pytest`.
 
 ## Description
 
-`pytest-ansible-units` is a `pytest` plugin that allows an ansible collection's unit tests to be run with only `pytest`.  `pytest` can be used from the command line or from the IDE.
+`pytest-ansible-units` is a `pytest` plugin that allows an ansible collection's unit tests to be run with only `pytest`. `pytest` can be used from the command line or from the IDE.
 
 ## Getting Started
 
@@ -16,14 +15,13 @@ An experimental `pytest` plugin to run an ansible collection's unit tests with `
 
 Installing `pytest-ansible-units` will install the following:
 
-* `ansible-core`
-* `pytest`
-* `pyyaml`
+- `ansible-core`
+- `pytest`
+- `pyyaml`
 
 `pytest-ansible-units` requires python 3.8 or greater.
 
 ### Installing
-
 
 ```
 python -m pip install pytest-ansible-units
@@ -31,34 +29,32 @@ python -m pip install pytest-ansible-units
 
 2 directory structures are supported, with either approach collection dependencies need to be installed. Either in the default user location or in the collection tree structure in option 1.
 
-
 #### Collection tree
 
 The preferred approach is to clone the collections being developed into it's proper collection tree path. This eliminates the need for any symlinks and other collections being developed can be cloned into the same tree structure.
 
 ```
-git clone <repo> collections/ansible_collections/<namepspace>/<name>
+git clone <repo> collections/ansible_collections/<namespace>/<name>
 ```
 
 Note:
 
-* `pytest` needs to be run in the root of the collection directory, adjacent to the collection's galaxy.yml file
+- `pytest` needs to be run in the root of the collection directory, adjacent to the collection's galaxy.yml file
 
 #### Shallow tree
 
 The alternative approach allow for a shallow directory structure.
 
 ```
-git clone <repo> 
+git clone <repo>
 ```
 
 Notes:
 
-* `pytest` needs to be run in the root of the collection directory, adjacent to the collection's galaxy.yml file
-* A collections directory will be created in the repository directory and the collections content linked into it.
-* Add `/collections/` to the .gitignore, since there is no need for this to be checked in.
-* `ansible-test sanity` will fail due to the symlinks, with this approach.
-
+- `pytest` needs to be run in the root of the collection directory, adjacent to the collection's galaxy.yml file
+- A collections directory will be created in the repository directory and the collections content linked into it.
+- Add `/collections/` to the .gitignore, since there is no need for this to be checked in.
+- `ansible-test sanity` will fail due to the symlinks, with this approach.
 
 ### Executing program
 
@@ -96,19 +92,18 @@ The follow errors may be seen:
 E   ModuleNotFoundError: No module named 'ansible_collections'
 ```
 
-* Check the `galaxy.yml` file for an accurate namespace and name
-* Ensure `pytest` is being run from the collection's root directory, adjacent to the `galaxy.yml`
+- Check the `galaxy.yml` file for an accurate namespace and name
+- Ensure `pytest` is being run from the collection's root directory, adjacent to the `galaxy.yml`
 
 ```
 HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
 ```
 
-* Ensure each test directory has an `__init__.py`
-
+- Ensure each test directory has an `__init__.py`
 
 ## Authors
 
-* cidrblock
+- cidrblock
 
 ## License
 

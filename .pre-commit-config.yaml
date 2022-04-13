@@ -1,0 +1,139 @@
+---
+default_language_version:
+  # ensures that we get same behavior on CI(s) as on local machines
+  python: python3.10
+repos:
+  - repo: https://github.com/asottile/add-trailing-comma.git
+    rev: v2.2.2
+    hooks:
+      - id: add-trailing-comma
+        args:
+          - --py36-plus
+        stages: ["manual"]
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: Sort import statements using isort
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v2.6.2"
+    hooks:
+      - id: prettier
+        # Original hook implementation is flaky due to *several* bugs described
+        # in https://github.com/prettier/prettier/issues/12364
+        # a) CI=1 needed to avoid incomplete output
+        # b) two executions are needed because --list-different works correctly
+        # only when run with --check as with --write the output will also
+        # include other entries and logging level cannot be used to keep only
+        # modified files listed (any file is listes using the log level, regardless if
+        # is modified or not).
+        # c) We avoid letting pre-commit pass each filename in order to avoid
+        # runing multiple instances in parallel. This also ensures that running
+        # prettier from the command line behaves identically with the pre-commit
+        # one. No real performance downsides.
+        # d) exit with the return code from list-different (0=none, 1=some)
+        # rather than the write (0=successfully rewrote files). pre-commit.ci
+        entry: env CI=1 bash -c "prettier --list-different . || ec=$? && prettier --loglevel=error --write . && exit $ec"
+        pass_filenames: false
+        args: []
+        additional_dependencies:
+          - prettier
+          - prettier-plugin-toml
+
+  - repo: https://github.com/psf/black.git
+    rev: 22.3.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  - repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v5.9.1
+    hooks:
+      - id: cspell
+        name: Spell check with cspell
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks.git
+    rev: v1.1.13
+    hooks:
+      - id: remove-tabs
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v4.2.0
+    hooks:
+      # Side-effects:
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: requirements-txt-fixer
+      - id: check-added-large-files
+      - id: fix-byte-order-marker
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-symlinks
+      - id: check-yaml
+      - id: detect-private-key
+
+      # Heavy checks:
+      - id: check-ast
+      - id: debug-statements
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.1.0
+    hooks:
+      - id: codespell
+        # NOTE: dout is part of the stdout action regex
+        args: ["-L", "dout"]
+        # We exclude generated and external files as they are not directly under
+        # our control, so we cannot fix spelling in them.
+        exclude: >
+          (?x)^
+            (
+              tests/fixtures/integration/actions/.*\.json|
+              share/ansible_navigator/grammar/.*\.json
+            )
+          $
+
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.26.3
+    hooks:
+      - id: yamllint
+        args:
+          - --strict
+        types: [file, yaml]
+
+  - repo: https://github.com/PyCQA/flake8.git
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        alias: flake8
+        language_version: python3
+        additional_dependencies:
+          - flake8-2020 >= 1.6.0
+          - flake8-isort >= 4.1.1
+          - darglint
+          - flake8-docstrings # uses pydocstyle
+
+  - repo: https://github.com/pre-commit/mirrors-mypy.git
+    rev: v0.942
+    hooks:
+      - id: mypy
+        alias: mypy-py310
+        name: MyPy, for Python 3.10
+        additional_dependencies:
+          - types-PyYAML
+        args:
+          - --python-version=3.10
+        pass_filenames: false
+
+  - repo: https://github.com/pycqa/pylint.git
+    rev: v2.13.5
+    hooks:
+      - id: pylint
+        args:
+          - src/
+        additional_dependencies:
+          - ansible-core
+          - pytest
+        pass_filenames: false
