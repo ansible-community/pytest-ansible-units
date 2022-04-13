@@ -49,9 +49,15 @@ jobs:
           git clone https://github.com/ansible-collections/ansible.utils.git --depth 1 collections/ansible_collections/ansible/utils
 
       - name: Install collection requirements
-        run: pip3 install -r requirements.txt -r test-requirements.txt 
+        run: python3 -m pip install -r requirements.txt -r test-requirements.txt 
         working-directory: ansible.utils
+
+      - name: Print the ansible version
+        run: ansible --version
       
+      - name: Print the python dependencies
+        run: python3 -m pip list
+
       - name: Run unit tests from source directory
         run: pytest -v 
         working-directory: ansible.utils
