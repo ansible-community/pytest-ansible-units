@@ -12,8 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
-    name: "python ${{ matrix.python-version }} / ${{ matrix.directory }}"
+        python-version: 
+        - 3.8
+        - 3.9
+        - 3.10
+        ansible-version:
+        - stable-2.9
+        - stable-2.10
+        - stable-2.11
+        - stable-2.12
+        - devel
+    name: "python ${{ matrix.python-version }} / ansible ${{ matrix.ansible-version }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -27,6 +36,9 @@ jobs:
         run: |
           pip install -e .
       
+      - name: Install ansible-core (${{ matrix.ansible }})
+        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+      
       - name: Clone ansible.utils into a source directory
         run: |
           git clone https://github.com/ansible-collections/ansible.utils.git --depth 1
@@ -35,7 +47,6 @@ jobs:
         run: |
           git clone https://github.com/ansible-collections/ansible.utils.git --depth 1 collections/ansible_collections/ansible/utils
 
-      
       - name: Install collection requirements
         run: pip3 install -r requirements.txt -r test-requirements.txt 
         working-directory: ansible.utils
