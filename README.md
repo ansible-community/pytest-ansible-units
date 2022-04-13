@@ -4,7 +4,7 @@
 ![VScode Debug](images/vscode_debug.png)
 
 
-A `pytest` plugin to run an ansible collection's unit tests with `pytest`.
+An experimental `pytest` plugin to run an ansible collection's unit tests with `pytest`.
 
 ## Description
 
@@ -24,10 +24,9 @@ Installing `pytest-ansible-units` will install the following:
 
 ### Installing
 
-Until released on `pypi`:
 
 ```
-python -m pip install git+https://github.com/cidrblock/pytest-ansible-units.git
+python -m pip install pytest-ansible-units
 ```
 
 2 directory structures are supported, with either approach collection dependencies need to be installed. Either in the default user location or in the collection tree structure in option 1.
