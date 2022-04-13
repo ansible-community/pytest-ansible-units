@@ -42,7 +42,7 @@ jobs:
 
       - name: Install ansible-core (${{ matrix.ansible-version }})
         run:
-          pip install https://github.com/ansible/ansible/archive/
+          pip install https://github.com/ansible/ansible/archive/\
           ${{ matrix.ansible-version }}.tar.gz
             --disable-pip-version-check
 
