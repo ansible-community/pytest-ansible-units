@@ -42,7 +42,7 @@ jobs:
 
       - name: Install ansible-core (${{ matrix.ansible-version }})
         run:
-          pip install https://github.com/ansible/ansible/archive/\
+          pip install https://github.com/ansible/ansible/archive/
           ${{ matrix.ansible-version }}.tar.gz
             --disable-pip-version-check
 
@@ -50,7 +50,7 @@ jobs:
         run: >-
           git clone
           https://github.com/ansible-collections/ansible.utils.git
-          --depth 1"
+          --depth 1
 
       - name: Clone ansible.utils into a collection tree
         run: >-
