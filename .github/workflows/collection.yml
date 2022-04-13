@@ -37,7 +37,7 @@ jobs:
           pip install -e .
       
       - name: Install ansible-core (${{ matrix.ansible }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible-version }}.tar.gz --disable-pip-version-check
       
       - name: Clone ansible.utils into a source directory
         run: |
