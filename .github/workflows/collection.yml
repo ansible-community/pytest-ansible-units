@@ -8,13 +8,13 @@ on:
 jobs:
   test:
     env:
-      collection_directory: ansible.utils
       PY_COLORS: "1"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.8]
-    name: "python ${{ matrix.python-version }}"
+        directory: ["ansible.utils", "collections/ansible_collections/ansible/utils"]
+    name: "python ${{ matrix.python-version }} / ${{ matrix.directory }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,14 +28,14 @@ jobs:
         run: |
           pip install -e .
       
-      - name: Download ansible.utils
+      - name: Clone ansible.utils
         run: |
-          git clone https://github.com/ansible-collections/ansible.utils.git
+          git clone https://github.com/ansible-collections/ansible.utils.git ${{ matrix.directory }}"
       
       - name: Install collection requirements
         run: pip3 install -r requirements.txt -r test-requirements.txt 
-        working-directory: ${{ env.collection_directory }}
+        working-directory: ${{ matrix.directory }}"
       
       - name: Run unit tests
         run: pytest -v 
-        working-directory: ${{ env.collection_directory }}
+        working-directory: ${{ matrix.directory }}"
