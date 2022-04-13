@@ -27,15 +27,17 @@ repos:
         # b) two executions are needed because --list-different works correctly
         # only when run with --check as with --write the output will also
         # include other entries and logging level cannot be used to keep only
-        # modified files listed (any file is listes using the log level, regardless if
-        # is modified or not).
+        # modified files listed (any file is listes using the log level,
+        # regardless if it is modified or not).
         # c) We avoid letting pre-commit pass each filename in order to avoid
         # runing multiple instances in parallel. This also ensures that running
         # prettier from the command line behaves identically with the pre-commit
         # one. No real performance downsides.
         # d) exit with the return code from list-different (0=none, 1=some)
         # rather than the write (0=successfully rewrote files). pre-commit.ci
-        entry: env CI=1 bash -c "prettier --list-different . || ec=$? && prettier --loglevel=error --write . && exit $ec"
+        entry: >-
+          env CI=1 bash -c "prettier --list-different . || 
+           ec=$? && prettier --loglevel=error --write . && exit $ec"
         pass_filenames: false
         args: []
         additional_dependencies:
