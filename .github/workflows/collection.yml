@@ -38,7 +38,10 @@ jobs:
 
       - name: Install the current project
         run: |
-          pip install -e .
+          pip install .
+      
+      - name: Remove the ansible-core installation from pytest-ansible-units
+        run: python3 -m pip uninstall -y ansible-core
 
       - name: Install ansible-core (${{ matrix.ansible-version }})
         run:
