@@ -1,10 +1,15 @@
-name: Collection integration tests
-on: [push, pull_request]
+name: Collection tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 jobs:
-  job-1:
+  test:
     env:
       collection_directory: ansible.utils
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.8]
