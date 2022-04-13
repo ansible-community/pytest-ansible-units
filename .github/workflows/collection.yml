@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        directory: ["ansible.utils", "collections/ansible_collections/ansible/utils"]
+        directory: ["/ansible.utils", "/collections/ansible_collections/ansible/utils"]
     name: "python ${{ matrix.python-version }} / ${{ matrix.directory }}"
     steps:
       - name: Checkout
