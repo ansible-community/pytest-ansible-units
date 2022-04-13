@@ -36,7 +36,7 @@ repos:
         # d) exit with the return code from list-different (0=none, 1=some)
         # rather than the write (0=successfully rewrote files). pre-commit.ci
         entry: >-
-          env CI=1 bash -c "prettier --list-different . || 
+          env CI=1 bash -c "prettier --list-different . ||
            ec=$? && prettier --loglevel=error --write . && exit $ec"
         pass_filenames: false
         args: []
@@ -85,17 +85,6 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
-        # NOTE: dout is part of the stdout action regex
-        args: ["-L", "dout"]
-        # We exclude generated and external files as they are not directly under
-        # our control, so we cannot fix spelling in them.
-        exclude: >
-          (?x)^
-            (
-              tests/fixtures/integration/actions/.*\.json|
-              share/ansible_navigator/grammar/.*\.json
-            )
-          $
 
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.26.3
@@ -124,6 +113,7 @@ repos:
         alias: mypy-py310
         name: MyPy, for Python 3.10
         additional_dependencies:
+          - pytest
           - types-PyYAML
         args:
           - --python-version=3.10

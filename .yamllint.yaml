@@ -4,4 +4,3 @@ extends: default
 rules:
   comments:
     min-spaces-from-content: 1 # prettier uses 1
-
