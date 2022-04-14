@@ -40,9 +40,6 @@ jobs:
         run: |
           pip install .
 
-      - name: Remove the ansible-core installation from pytest-ansible-units
-        run: python3 -m pip uninstall -y ansible-core
-
       - name: Install ansible-core (${{ matrix.ansible-version }})
         run: "pip install https://github.com/ansible/ansible/archive/\
           ${{ matrix.ansible-version }}.tar.gz --disable-pip-version-check"
