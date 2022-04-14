@@ -10,11 +10,23 @@ from typing import Optional
 from typing import Tuple
 
 import pytest
-import yaml
 
 
 logger = logging.getLogger(__name__)
 
+try:
+    import yaml
+
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+
+try:
+    from ansible import __version__
+
+    HAS_ANSIBLE = True
+except ImportError:
+    HAS_ANSIBLE = False
 
 try:
     from ansible.utils.collection_loader._collection_finder import (
@@ -73,6 +85,13 @@ def pytest_collection(session: pytest.Session) -> None:
 
     :param session: The pytest session object
     """
+    if not HAS_ANSIBLE:
+        logger.error("ansible is not installed, plugin not activated")
+        return
+    if not HAS_YAML:
+        logger.error("pyyaml is not installed, plugin not activated")
+        return
+
     start_path = session.startpath
     logger.debug("Start path: %s", start_path)
     namespace, name = get_collection_name(start_path)

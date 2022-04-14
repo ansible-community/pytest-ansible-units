@@ -15,17 +15,17 @@ An experimental `pytest` plugin to run an ansible collection's unit tests with `
 
 Installing `pytest-ansible-units` will install the following:
 
-- `ansible-core`
 - `pytest`
-- `pyyaml`
 
-`pytest-ansible-units` requires python 3.8 or greater.
+`pytest-ansible-units` requires python 3.8 or greater, ansible-core and pyyaml.
 
 ### Installing
 
 ```
 python -m pip install pytest-ansible-units
 ```
+
+`ansible-core` and `pyyaml` need to be installed to activate the plugin.
 
 2 directory structures are supported, with either approach collection dependencies need to be installed. Either in the default user location or in the collection tree structure in option 1.
 
