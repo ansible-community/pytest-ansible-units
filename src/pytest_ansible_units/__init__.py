@@ -16,12 +16,14 @@ logger = logging.getLogger(__name__)
 
 try:
     import yaml
+
     HAS_YAML = True
 except ImportError:
     HAS_YAML = False
 
 try:
     from ansible import __version__
+
     HAS_ANSIBLE = True
 except ImportError:
     HAS_ANSIBLE = False
