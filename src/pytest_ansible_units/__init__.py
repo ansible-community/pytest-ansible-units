@@ -129,8 +129,12 @@ def pytest_collection(session: pytest.Session) -> None:
     if HAS_COLLECTION_FINDER:
         # pylint: disable=protected-access
         _AnsibleCollectionFinder(paths=paths)._install()
-    else:
-        sys.path.insert(0, str(collections_dir))
+    
+    # Inject the path for the collection into sys.path
+    # This is needed for import udring mock tests
+    sys.path.insert(0, str(collections_dir))
+    logger.debug("sys.path updated: %s", sys.path)
+
 
     # TODO: Should we install any collection dependencies as well?
     # or let the developer do that?
