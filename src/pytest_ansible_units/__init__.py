@@ -43,7 +43,14 @@ def pytest_configure(config: pytest.Config) -> None:
 
     :param config: The pytest configuration object
     """
-    level = logging.DEBUG if config.option.verbose > 1 else logging.INFO
+    log_map = {
+        0: logging.CRITICAL,
+        1: logging.ERROR,
+        2: logging.WARNING,
+        3: logging.INFO,
+        4: logging.DEBUG,
+    }
+    level = log_map.get(config.option.verbose)
     logging.basicConfig(level=level)
     logger.debug("Logging initialized")
 
@@ -55,7 +62,7 @@ def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]
     :returns: A tuple of the namespace and name
     """
     info_file = start_path / "galaxy.yml"
-    logger.debug("Looking for collection info in %s", info_file)
+    logger.info("Looking for collection info in %s", info_file)
 
     try:
         with info_file.open(encoding="utf-8") as fh:
@@ -72,8 +79,8 @@ def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]
         return None, None
 
     logger.debug("galaxy.yml file found, plugin activated")
-    logger.debug("Collection namespace: %s", namespace)
-    logger.debug("Collection name: %s", name)
+    logger.info("Collection namespace: %s", namespace)
+    logger.info("Collection name: %s", name)
     return namespace, name
 
 
@@ -102,11 +109,11 @@ def pytest_collection(session: pytest.Session) -> None:
     # Determine if the start_path is in a collections tree
     collection_tree = ("collections", "ansible_collections", namespace, name)
     if start_path.parts[-4:] == collection_tree:
-        logger.debug("In collection tree")
+        logger.info("In collection tree")
         collections_dir = start_path.parents[2]
 
     else:
-        logger.debug("Not in collection tree")
+        logger.info("Not in collection tree")
         collections_dir = start_path / "collections"
         name_dir = collections_dir / "ansible_collections" / namespace / name
 
@@ -119,23 +126,27 @@ def pytest_collection(session: pytest.Session) -> None:
                     continue
                 os.symlink(entry, name_dir / entry.name)
 
-    logger.debug("Collections dir: %s", collections_dir)
+    logger.info("Collections dir: %s", collections_dir)
 
     # TODO: Make this a configuration option, check COLLECTIONS_PATHS
     # Add the user location for any dependencies
     paths = [str(collections_dir), "~/.ansible/collections"]
-    logger.debug("Paths: %s", paths)
+    logger.info("Paths: %s", paths)
 
     if HAS_COLLECTION_FINDER:
         # pylint: disable=protected-access
         _AnsibleCollectionFinder(paths=paths)._install()
-    
+
     # Inject the path for the collection into sys.path
     # This is needed for import udring mock tests
     sys.path.insert(0, str(collections_dir))
     logger.debug("sys.path updated: %s", sys.path)
 
-
     # TODO: Should we install any collection dependencies as well?
     # or let the developer do that?
     # e.g. ansible-galaxy collection install etc
+
+    # Set the environment variable as courtesy for integration tests
+    env_paths = os.pathsep.join(paths)
+    logger.info("Setting ANSIBLE_COLLECTIONS_PATH to %s", env_paths)
+    os.environ["ANSIBLE_COLLECTIONS_PATHS"] = env_paths
