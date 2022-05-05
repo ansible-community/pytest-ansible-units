@@ -146,7 +146,7 @@ def pytest_collection(session: pytest.Session) -> None:
     # or let the developer do that?
     # e.g. ansible-galaxy collection install etc
 
-    # Set the envvar as courtesy for integration tests
+    # Set the environment variable as courtesy for integration tests
     env_paths = os.pathsep.join(paths)
     logger.info("Setting ANSIBLE_COLLECTIONS_PATH to %s", env_paths)
     os.environ["ANSIBLE_COLLECTIONS_PATHS"] = env_paths
