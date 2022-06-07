@@ -53,6 +53,7 @@ def pytest_configure(config: pytest.Config) -> None:
     level = log_map.get(config.option.verbose)
     logging.basicConfig(level=level)
     logger.debug("Logging initialized")
+    inject(config.invocation_params.dir)
 
 
 def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]:
@@ -84,13 +85,13 @@ def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]
     return namespace, name
 
 
-def pytest_collection(session: pytest.Session) -> None:
-    """Prepare for a test session.
+def inject(start_path: Path) -> None:
+    """Inject the collection path.
 
     In the case of ansible > 2.9, initialize the collection finder with the collection path
     otherwise, inject the collection path into sys.path.
 
-    :param session: The pytest session object
+    :param start_path: The path where pytest was invoked
     """
     if not HAS_ANSIBLE:
         logger.error("ansible is not installed, plugin not activated")
@@ -99,7 +100,6 @@ def pytest_collection(session: pytest.Session) -> None:
         logger.error("pyyaml is not installed, plugin not activated")
         return
 
-    start_path = session.startpath
     logger.debug("Start path: %s", start_path)
     namespace, name = get_collection_name(start_path)
     if namespace is None or name is None:
