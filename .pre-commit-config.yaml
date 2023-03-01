@@ -4,7 +4,7 @@ default_language_version:
   python: python3.10
 repos:
   - repo: https://github.com/asottile/add-trailing-comma.git
-    rev: v2.3.0
+    rev: v2.4.0
     hooks:
       - id: add-trailing-comma
         args:
@@ -12,7 +12,7 @@ repos:
         stages: ["manual"]
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
         name: Sort import statements using isort
@@ -45,19 +45,19 @@ repos:
           - prettier-plugin-toml
 
   - repo: https://github.com/psf/black.git
-    rev: 22.12.0
+    rev: 23.1.0
     hooks:
       - id: black
         language_version: python3
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v6.16.0
+    rev: v6.27.0
     hooks:
       - id: cspell
         name: Spell check with cspell
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks.git
-    rev: v1.3.1
+    rev: v1.4.2
     hooks:
       - id: remove-tabs
 
@@ -87,7 +87,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.28.0
+    rev: v1.29.0
     hooks:
       - id: yamllint
         args:
@@ -107,7 +107,7 @@ repos:
           - flake8-docstrings # uses pydocstyle
 
   - repo: https://github.com/pre-commit/mirrors-mypy.git
-    rev: v0.991
+    rev: v1.0.1
     hooks:
       - id: mypy
         alias: mypy-py310
@@ -120,7 +120,7 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/pycqa/pylint.git
-    rev: v2.15.8
+    rev: v2.16.2
     hooks:
       - id: pylint
         args:
