@@ -11,6 +11,8 @@ from typing import Tuple
 
 import pytest
 
+from _pytest.config.argparsing import Parser
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +40,19 @@ except ImportError:
     HAS_COLLECTION_FINDER = False
 
 
+def pytest_addoption(parser: Parser) -> None:
+    """Add the options to the pytest command.
+
+    :param parser: The pytest parser object
+    """
+    parser.addoption(
+        "--inject-only",
+        action="store_true",
+        default=False,
+        help="Only inject the current ANSIBLE_COLLECTIONS_PATHS",
+    )
+
+
 def pytest_configure(config: pytest.Config) -> None:
     """Configure the logger.
 
@@ -53,7 +68,10 @@ def pytest_configure(config: pytest.Config) -> None:
     level = log_map.get(config.option.verbose)
     logging.basicConfig(level=level)
     logger.debug("Logging initialized")
-    inject(config.invocation_params.dir)
+    if config.option.inject_only:
+        inject_only()
+    else:
+        inject(config.invocation_params.dir)
 
 
 def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]:
@@ -150,3 +168,15 @@ def inject(start_path: Path) -> None:
     env_paths = os.pathsep.join(paths)
     logger.info("Setting ANSIBLE_COLLECTIONS_PATH to %s", env_paths)
     os.environ["ANSIBLE_COLLECTIONS_PATHS"] = env_paths
+
+
+def inject_only() -> None:
+    """Inject the current ANSIBLE_COLLECTIONS_PATHS."""
+    env_paths = os.environ.get("ANSIBLE_COLLECTIONS_PATHS", "")
+    for path in env_paths.split(os.pathsep):
+        if path:
+            sys.path.insert(0, path)
+    logger.debug("sys.path updated: %s", sys.path)
+    if HAS_COLLECTION_FINDER:
+        # pylint: disable=protected-access
+        _AnsibleCollectionFinder(paths=env_paths)._install()
