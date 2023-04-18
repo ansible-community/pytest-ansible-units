@@ -38,6 +38,26 @@ except ImportError:
     HAS_COLLECTION_FINDER = False
 
 
+def pytest_addoption(parser):
+    """Add the --sacp option to the pytest command.
+
+    :param parser: The pytest parser object
+    """
+    parser.addoption(
+        "--sacp",
+        action="store_true",
+        default=True,
+        help="Set the ANSIBLE_COLLECTIONS_PATHS environment variable",
+    )
+
+    parser.addoption(
+        "--inject-only",
+        action="store_true",
+        default=False,
+        help="Only inject the current ANSIBLE_COLLECTIONS_PATHS",
+    )
+
+
 def pytest_configure(config: pytest.Config) -> None:
     """Configure the logger.
 
@@ -93,6 +113,11 @@ def inject(start_path: Path) -> None:
 
     :param start_path: The path where pytest was invoked
     """
+    if session.config.getoption("--inject-only"):
+        logger.info("Injecting only, not installing collection finder")
+        inject_only()
+        return
+
     if not HAS_ANSIBLE:
         logger.error("ansible is not installed, plugin not activated")
         return
@@ -150,3 +175,16 @@ def inject(start_path: Path) -> None:
     env_paths = os.pathsep.join(paths)
     logger.info("Setting ANSIBLE_COLLECTIONS_PATH to %s", env_paths)
     os.environ["ANSIBLE_COLLECTIONS_PATHS"] = env_paths
+
+
+def inject_only():
+    """Inject the current ANSIBLE_COLLECTIONS_PATHS."""
+
+    env_paths = os.environ.get("ANSIBLE_COLLECTIONS_PATHS", "")
+    for path in env_paths.split(os.pathsep):
+        if path:
+            sys.path.insert(0, path)
+    logger.debug("sys.path updated: %s", sys.path)
+    if HAS_COLLECTION_FINDER:
+        # pylint: disable=protected-access
+        _AnsibleCollectionFinder(paths=env_paths)._install()
