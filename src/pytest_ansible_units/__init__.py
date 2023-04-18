@@ -39,7 +39,7 @@ except ImportError:
 
 
 def pytest_addoption(parser):
-    """Add the --sacp option to the pytest command.
+    """Add the options to the pytest command.
 
     :param parser: The pytest parser object
     """
