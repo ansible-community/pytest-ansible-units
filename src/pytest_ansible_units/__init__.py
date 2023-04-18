@@ -11,6 +11,8 @@ from typing import Tuple
 
 import pytest
 
+from _pytest.config.argparsing import Parser
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +40,7 @@ except ImportError:
     HAS_COLLECTION_FINDER = False
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser: Parser) -> None:
     """Add the options to the pytest command.
 
     :param parser: The pytest parser object
@@ -66,7 +68,10 @@ def pytest_configure(config: pytest.Config) -> None:
     level = log_map.get(config.option.verbose)
     logging.basicConfig(level=level)
     logger.debug("Logging initialized")
-    inject(config.invocation_params.dir)
+    if config.option.inject_only:
+        inject_only()
+    else:
+        inject(config.invocation_params.dir)
 
 
 def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]:
@@ -106,11 +111,6 @@ def inject(start_path: Path) -> None:
 
     :param start_path: The path where pytest was invoked
     """
-    if session.config.getoption("--inject-only"):
-        logger.info("Injecting only, not installing collection finder")
-        inject_only()
-        return
-
     if not HAS_ANSIBLE:
         logger.error("ansible is not installed, plugin not activated")
         return
@@ -170,9 +170,8 @@ def inject(start_path: Path) -> None:
     os.environ["ANSIBLE_COLLECTIONS_PATHS"] = env_paths
 
 
-def inject_only():
+def inject_only() -> None:
     """Inject the current ANSIBLE_COLLECTIONS_PATHS."""
-
     env_paths = os.environ.get("ANSIBLE_COLLECTIONS_PATHS", "")
     for path in env_paths.split(os.pathsep):
         if path:
