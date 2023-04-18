@@ -44,13 +44,6 @@ def pytest_addoption(parser):
     :param parser: The pytest parser object
     """
     parser.addoption(
-        "--sacp",
-        action="store_true",
-        default=True,
-        help="Set the ANSIBLE_COLLECTIONS_PATHS environment variable",
-    )
-
-    parser.addoption(
         "--inject-only",
         action="store_true",
         default=False,
