@@ -52,6 +52,13 @@ def pytest_addoption(parser: Parser) -> None:
         help="Only inject the current ANSIBLE_COLLECTIONS_PATHS",
     )
 
+    parser.addoption(
+        "--unit",
+        action="store_true",
+        default=False,
+        help="Enable the unit test mode",
+    )
+
 
 def pytest_configure(config: pytest.Config) -> None:
     """Configure the logger.
@@ -72,6 +79,8 @@ def pytest_configure(config: pytest.Config) -> None:
         inject_only()
     else:
         inject(config.invocation_params.dir)
+    if config.option.unit:
+        logger.debug("Running in unit test mode")
 
 
 def get_collection_name(start_path: Path) -> Tuple[Optional[str], Optional[str]]:
