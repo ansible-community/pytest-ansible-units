@@ -1,3 +1,9 @@
+# Notice
+
+The functionality of this plugin has been merged into the pytest-ansible plugin. This plugin is no longer maintained.
+
+Please switch to [pytest-ansible](https://github.com/ansible-community/pytest-ansible) for future updates.
+
 # pytest-ansible-units
 
 ![VScode Overview](images/vscode_overview.png)
